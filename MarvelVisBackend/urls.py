@@ -16,6 +16,17 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from manager import CharacterManager, FilterManager
+
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+
+    # CharacterManager API Calls
+	url(r'^api/character/$', CharacterManager.charRequest, name='charrequest'),
+	url(r'^api/character/(?P<character_id>\d*)/$', CharacterManager.charRequest, name='chardata'),
+
+    # For Affiliations
+    url(r'^api/affiliation/$', FilterManager.getAllAffiliations, name='affiliations_all'), 
+
 ]
