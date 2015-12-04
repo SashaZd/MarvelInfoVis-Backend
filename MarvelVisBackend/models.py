@@ -7,6 +7,9 @@ class Affiliations(models.Model):
 	def __str__(self):
 		return self.title
 
+	def getResponseData(self):
+		return self.title.strip()
+
 	class Meta:
 		ordering = ('title',)
 
@@ -24,16 +27,6 @@ class Character(models.Model):
 	# Relationships & Many-Many Fields 
 	affiliations = models.ManyToManyField(Affiliations)
 	relationships = models.ManyToManyField('self', through='Relationship', symmetrical=False, related_name='related_to')
-
-	# def __init__(self, character_id, name, appearances, gender, nationality, intro_year, image, bio_desc):
-	# 	self.character_id = character_id
-	# 	self.name = name
-	# 	self.appearances = appearances
-	# 	self.gender = gender
-	# 	self.nationality = nationality
-	# 	self.intro_year = intro_year
-	# 	self.image = image
-	# 	self.bio_desc = bio_desc
 
 	def __unicode__(self):
 		name = self.name
