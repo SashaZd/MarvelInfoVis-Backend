@@ -23,10 +23,15 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     # CharacterManager API Calls
-	url(r'^api/character/$', CharacterManager.charRequest, name='charrequest'),
-	url(r'^api/character/(?P<character_id>\d*)/$', CharacterManager.charRequest, name='chardata'),
+	# url(r'^api/character/$', CharacterManager.charRequest, name='charrequest'),
+	# url(r'^api/character/(?P<character_id>\d*)/$', CharacterManager.charRequest, name='chardata'),
 
     # For Affiliations
     url(r'^api/affiliation/$', FilterManager.getAllAffiliations, name='affiliations_all'), 
+
+
+    # For Setting Character Attributes
+    url(r'^api/gender/set/$', CharacterManager.setGenders, name='set_genders'), 
+    url(r'^api/affiliation/set/$', CharacterManager.setAffiliation, name='set_affiliations'), 
 
 ]

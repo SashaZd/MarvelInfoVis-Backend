@@ -2,10 +2,78 @@ import json
 import re
 
 
-
 listOfCharsFiles = open("data/charactersList.txt")
 CHAR_BASE_LINK = "data/characters/"
 COMICS_BASE_LINK = "data/comics/"
+wikiData = json.loads(open("data/wikiData.json").read())
+
+
+def getAffiliationMembers():
+	affilationList = json.loads(open("data/affiliations_all.json").read())
+	charAffs = {}
+
+	for eachCharFile in listOfCharsFiles:	
+		filePath = CHAR_BASE_LINK+eachCharFile.strip()
+		charData = json.loads(open(filePath).read())
+		affiliation = []
+
+		char_id = charData["id"]
+		char_name = []
+		char_name.append(charData["name"])
+
+		if "wiki" in charData and "real_name" in charData["wiki"]:
+			char_name.append(charData["wiki"]["real_name"])
+
+		found = [charName for charName in char_name if charName in wikiData]
+		print char_id
+		if len(found) > 0:
+			for eachAffiliation in affilationList: 
+				if "Affiliation" in wikiData[found[0]]:
+					if eachAffiliation in wikiData[found[0]] and eachAffiliation not in affiliation:
+						affiliation.append(eachAffiliation)
+
+				if "wiki" in charData and "groups" in charData["wiki"]:
+					if eachAffiliation in charData["wiki"]["groups"] and eachAffiliation not in affiliation: 
+						affiliation.append(eachAffiliation)
+
+				if "wiki" in charData and "categories" in charData["wiki"] and charData["wiki"]["categories"] is not None and len(charData["wiki"]["categories"]) > 0:
+					if eachAffiliation in charData["wiki"]["categories"] and eachAffiliation not in affiliation:
+						affiliation.append(eachAffiliation)
+
+		charAffs[char_id]=affiliation
+
+	affiliation_members = open("data/affiliation_members.json", "w")
+	affiliation_members.write(json.dumps(charAffs))	
+
+
+def getAllGenders():
+	genders = {}
+
+	for eachCharFile in listOfCharsFiles:
+		filePath = CHAR_BASE_LINK+eachCharFile.strip()
+		charData = json.loads(open(filePath).read())
+		gender = "Unknown"
+
+		char_id = charData["id"]
+		char_name = []
+		char_name.append(charData["name"])
+
+		if "wiki" in charData and "real_name" in charData["wiki"]:
+			char_name.append(charData["wiki"]["real_name"])
+
+		found = [charName for charName in char_name if charName in wikiData]
+		
+		if len(found) > 0:
+			# print wikiData[found[0]]
+			if "Gender" in wikiData[found[0]]:
+				gender = wikiData[found[0]]["Gender"]
+
+		genders[char_id] = gender
+
+	gender_file = open("data/genders.json", "w")
+	gender_file.write(json.dumps(genders))	
+
+
 
 
 def getAllOriginYears():
@@ -97,4 +165,13 @@ def getAllUniqueAffiliations():
 	listOfAffiliationsFile = open("affiliations.txt", "w")
 	listOfAffiliationsFile.write(json.dumps(listOfAffiliations))
 
-getAllOriginYears()
+getAffiliationMembers()
+
+
+
+
+
+
+
+
+

@@ -44,7 +44,6 @@ class Character(models.Model):
 		response_data = {}
 		response_data["character_id"] = self.character_id
 		response_data["name"] = self.name
-		response_data["cid"] = self.cid
 		response_data["name"] = self.name
 		response_data["appearances"] = self.appearances
 		response_data["gender"] = self.gender
@@ -55,6 +54,23 @@ class Character(models.Model):
 		
 		return response_data
 
+	def setAffiliation(self):
+		allChars = json.loads(open("data/affiliation_members.json").read())
+		# self.gender = allChars[str(self.character_id)][0].strip()
+		# self.save()
+
+		affiliations_list = allChars[str(self.character_id)]
+		# return affiliations_list
+
+		for eachAffiliation in affiliations_list:
+			self.affiliations.add(Affiliations.objects.filter(title=eachAffiliation)[0])
+		
+		self.save()
+
+	def setGender(self):
+		allChars = json.loads(open("data/genders.json").read())
+		self.gender = allChars[str(self.character_id)][0].strip()
+		self.save()
 
 class Relationship(models.Model):
 	from_person = models.ForeignKey(Character, related_name='from_people')
