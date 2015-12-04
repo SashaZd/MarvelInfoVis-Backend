@@ -26,8 +26,9 @@ urlpatterns = [
 	# url(r'^api/character/$', CharacterManager.charRequest, name='charrequest'),
 	# url(r'^api/character/(?P<character_id>\d*)/$', CharacterManager.charRequest, name='chardata'),
 
-    # For Affiliations
+    # For Filters
     url(r'^api/affiliation/$', FilterManager.affiliationRequest, name='affiliations_all'), 
+    url(r'^api/nationality/$', FilterManager.nationalityRequest, name='nationality_all'), 
 
 
     # For Setting Character Attributes
