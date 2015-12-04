@@ -44,7 +44,6 @@ class Character(models.Model):
 		response_data = {}
 		response_data["character_id"] = self.character_id
 		response_data["name"] = self.name
-		response_data["name"] = self.name
 		response_data["appearances"] = self.appearances
 		response_data["gender"] = self.gender
 		response_data["nationality"] = self.nationality

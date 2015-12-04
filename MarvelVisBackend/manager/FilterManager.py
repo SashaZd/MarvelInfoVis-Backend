@@ -19,7 +19,7 @@ def getAllAffiliations(request):
 			chars = eachAffiliation.character_set.all()
 			members = []
 			for eachChar in chars: 
-				members.append(eachChar.name)
+				members.append(eachChar.getResponseData())
 
 			if len(members) > 0:
 				newAffObj = {
