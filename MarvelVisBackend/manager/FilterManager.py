@@ -16,11 +16,17 @@ def getAllAffiliations(request):
 
 	if len(allAffiliations) > 0:
 		for eachAffiliation in allAffiliations:
-			newAffObj = {
-				"name": eachAffiliation.title,
-				"members": []
-			}
-			response_data.append(newAffObj)
+			chars = eachAffiliation.character_set.all()
+			members = []
+			for eachChar in chars: 
+				members.append(eachChar.name)
+
+			if len(members) > 0:
+				newAffObj = {
+					"name": eachAffiliation.title,
+					"members": members
+				}
+				response_data.append(newAffObj)
 
 	else: 
 		response_data = {"error":"There's no data in the Affiliations Table. Did you wipe the database? Uncomment and Run the Affiliations script at the bottom of models.py after the first time you run makemigrations."}
