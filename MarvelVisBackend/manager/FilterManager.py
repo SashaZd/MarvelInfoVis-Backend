@@ -53,10 +53,7 @@ def getNationalityByName(request):
 		members.append(eachChar.getResponseData())
 
 	if len(members) > 0:
-		nationalityObj = {
-			"members": members
-		}
-		response_data.append(nationalityObj)
+		response_data.extend(members)
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
