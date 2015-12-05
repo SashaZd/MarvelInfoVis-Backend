@@ -3,7 +3,9 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from datetime import datetime, timedelta
+
 from django.db.models import Count
+from django.db.models import Avg, Max, Min
 
 # Other Imports
 from ..models import Affiliations, Character, Relationship
@@ -45,12 +47,36 @@ def affiliationRequest(request):
 
 @csrf_exempt
 def appearancesRange(request):
-	pass
+	if request.method == "POST":
+		return getAppearancesWithinRange(request)
 
 #################################
 # Redirected Methods Below
 #################################
 
+
+def getAppearancesWithinRange(request):
+	startRange = request.POST.get('startRange','')
+	endRange = request.POST.get('endRange','')
+
+	if startRange == '':
+		startRange = Character.objects.aggregate(Min('appearances'))["appearances__min"]
+
+	if endRange == '': 
+		endRange = Character.objects.aggregate(Max('appearances'))["appearances__max"]
+
+	response_data = []
+
+	appearances = Character.objects.filter(appearances__range=(startRange, endRange))
+
+	members = []
+	for eachChar in appearances:
+		members.append(eachChar.getResponseData())
+
+	if len(members) > 0:
+		response_data.extend(members)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def getAllGenders(request):
@@ -78,7 +104,6 @@ def getGenderByName(request):
 		response_data.extend(members)
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
-
 
 
 
