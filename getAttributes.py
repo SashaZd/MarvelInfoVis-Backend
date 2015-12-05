@@ -8,6 +8,36 @@ COMICS_BASE_LINK = "data/comics/"
 wikiData = json.loads(open("data/wikiData.json").read())
 
 
+
+def getAllRelationships():
+	charRels = {}
+
+	for eachCharFile in listOfCharsFiles:
+		filePath = CHAR_BASE_LINK+eachCharFile.strip()
+		charData = json.loads(open(filePath).read())
+		
+		char_id = charData["id"]
+		
+		if "wiki" in charData and "relatives" in charData["wiki"]:
+			charRels[char_id] = {
+				"name": charData["name"],
+				"relatives": charData["wiki"]["relatives"]
+			}
+
+
+	tempRelationshipFile = open("relationship.json","w")
+	tempRelationshipFile.write(json.dumps(charRels))	
+
+
+# To do
+def getAllComicsData():
+	listOfComicFiles = open("data/allComics.txt")
+
+
+
+
+
+
 def getAffiliationMembers():
 	affilationList = json.loads(open("data/affiliations_all.json").read())
 	charAffs = {}
@@ -165,11 +195,9 @@ def getAllUniqueAffiliations():
 	listOfAffiliationsFile = open("affiliations.txt", "w")
 	listOfAffiliationsFile.write(json.dumps(listOfAffiliations))
 
-getAffiliationMembers()
 
 
-
-
+# getAllRelationships()
 
 
 

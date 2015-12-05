@@ -30,13 +30,15 @@ urlpatterns = [
     url(r'^api/filter/affiliation/$', FilterManager.affiliationRequest, name='affiliations_all'), 
     url(r'^api/filter/nationality/$', FilterManager.nationalityRequest, name='nationality_all'), 
     url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='nationality_all'), 
-    url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'), 
-    
+    url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'),     
     url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='gender_all'), 
+
+    url()
 
 
     # For Setting Character Attributes
     url(r'^api/gender/set/$', CharacterManager.setGenders, name='set_genders'), 
     url(r'^api/affiliation/set/$', CharacterManager.setAffiliation, name='set_affiliations'), 
+    url(r'^api/relations/set/$', CharacterManager.setRelations, name='set_relations'), 
 
 ]

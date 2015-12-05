@@ -64,6 +64,7 @@ class Character(models.Model):
 		self.gender = allChars[str(self.character_id)][0].strip()
 		self.save()
 
+
 class Relationship(models.Model):
 	from_person = models.ForeignKey(Character, related_name='from_people')
 	to_person = models.ForeignKey(Character, related_name='to_people')
@@ -121,6 +122,18 @@ for eachCharFile in listOfCharsFiles:
 
 	newChar.save()
 """	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
