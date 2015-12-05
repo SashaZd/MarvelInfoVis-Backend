@@ -26,7 +26,7 @@ SECRET_KEY = 'y$k(b4wcj37=!_7gf)mo$tc-1#$uns-)du0k9!5+7c=it74auy'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -37,10 +37,13 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'corsheaders',
 	'MarvelVisBackend'
 )
 
 MIDDLEWARE_CLASSES = (
+	'corsheaders.middleware.CorsMiddleware',
+	'django.middleware.common.CommonMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
