@@ -10,14 +10,21 @@ from ..models import Affiliations, Character, Relationship
 
 
 @csrf_exempt
+def yearIntroducedRequest(request):
+	if request.method == "GET":
+		return getAllYearsIntroduced(request)
 
-@csrf_exempt
+	else: 
+		return getYearIntroducedByYear(request)
+
+
 def nationalityRequest(request):
 	if request.method == "GET":
 		return getAllNationalities(request)
 
 	else: 
 		return getNationalityByName(request)
+
 
 def affiliationRequest(request):
 	if request.method == "GET":
@@ -27,6 +34,41 @@ def affiliationRequest(request):
 	else:
 		# Returns a specific affiliation with it's members as charObjs
 		return getAffiliationByName(request)
+
+
+#################################
+# Redirected Methods Below
+#################################
+
+
+def getAllYearsIntroduced(request):
+	response_data = []
+
+	allYears = Character.objects.all().values("intro_year").distinct().annotate(number=Count("id"))
+
+	for eachYear in allYears: 
+		response_data.append(eachYear)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def getYearIntroducedByYear(request):
+	response_data = []
+	name =  request.POST.get('year','')
+
+	charsByYear = Character.objects.filter(intro_year__icontains=name)
+
+	print len(charsByYear)
+
+	members = []
+	for eachChar in charsByYear:
+		members.append(eachChar.getResponseData())
+
+	if len(members) > 0:
+		response_data.extend(members)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 
 def getAllNationalities(request):
