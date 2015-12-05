@@ -43,6 +43,9 @@ def affiliationRequest(request):
 		# Returns a specific affiliation with it's members as charObjs
 		return getAffiliationByName(request)
 
+@csrf_exempt
+def appearancesRange(request):
+	pass
 
 #################################
 # Redirected Methods Below
