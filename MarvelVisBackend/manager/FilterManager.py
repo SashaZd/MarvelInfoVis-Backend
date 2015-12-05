@@ -11,12 +11,11 @@ from ..models import Affiliations, Character, Relationship
 
 @csrf_exempt
 def genderRequest(request):
-	# if request.method == "GET":
-	# 	return getAllGenders(request)
+	if request.method == "GET":
+		return getAllGenders(request)
 
-	# else: 
-	# 	return getGenderByName(request)
-	pass
+	else: 
+		return getGenderByName(request)
 
 
 def yearIntroducedRequest(request):
@@ -48,6 +47,38 @@ def affiliationRequest(request):
 #################################
 # Redirected Methods Below
 #################################
+
+
+
+def getAllGenders(request):
+	response_data = []
+
+	genders = Character.objects.all().values("gender").distinct().annotate(number=Count("id"))
+
+	for eachGender in genders: 
+		response_data.append(eachGender)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def getGenderByName(request):
+	response_data = []
+	gender =  request.POST.get('gender','')
+
+	charsByGender = Character.objects.filter(gender__icontains=gender)
+
+	print len(charsByGender)
+
+	members = []
+	for eachChar in charsByGender:
+		members.append(eachChar.getResponseData())
+
+	if len(members) > 0:
+		response_data.extend(members)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
 
 
 def getAllYearsIntroduced(request):
