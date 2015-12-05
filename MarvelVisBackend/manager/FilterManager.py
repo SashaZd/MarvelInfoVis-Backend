@@ -10,6 +10,15 @@ from ..models import Affiliations, Character, Relationship
 
 
 @csrf_exempt
+def genderRequest(request):
+	# if request.method == "GET":
+	# 	return getAllGenders(request)
+
+	# else: 
+	# 	return getGenderByName(request)
+	pass
+
+
 def yearIntroducedRequest(request):
 	if request.method == "GET":
 		return getAllYearsIntroduced(request)
