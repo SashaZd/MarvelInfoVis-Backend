@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^api/filter/nationality/$', FilterManager.nationalityRequest, name='nationality_all'), 
     url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='nationality_all'), 
     url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'), 
+    
+    url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='gender_all'), 
 
 
     # For Setting Character Attributes

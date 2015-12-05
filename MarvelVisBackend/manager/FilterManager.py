@@ -65,9 +65,7 @@ def getGenderByName(request):
 	response_data = []
 	gender =  request.POST.get('gender','')
 
-	charsByGender = Character.objects.filter(gender__icontains=gender)
-
-	print len(charsByGender)
+	charsByGender = Character.objects.filter(gender=gender)
 
 	members = []
 	for eachChar in charsByGender:
@@ -98,8 +96,6 @@ def getYearIntroducedByYear(request):
 
 	charsByYear = Character.objects.filter(intro_year__icontains=name)
 
-	print len(charsByYear)
-
 	members = []
 	for eachChar in charsByYear:
 		members.append(eachChar.getResponseData())
@@ -127,8 +123,6 @@ def getNationalityByName(request):
 	name =  request.POST.get('name','')
 
 	charsByNation = Character.objects.filter(nationality__icontains=name)
-
-	print len(charsByNation)
 
 	members = []
 	for eachChar in charsByNation:
