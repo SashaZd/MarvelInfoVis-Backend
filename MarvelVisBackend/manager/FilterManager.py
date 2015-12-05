@@ -17,7 +17,7 @@ def genderRequest(request):
 	else: 
 		return getGenderByName(request)
 
-
+@csrf_exempt
 def yearIntroducedRequest(request):
 	if request.method == "GET":
 		return getAllYearsIntroduced(request)
@@ -25,7 +25,7 @@ def yearIntroducedRequest(request):
 	else: 
 		return getYearIntroducedByYear(request)
 
-
+@csrf_exempt
 def nationalityRequest(request):
 	if request.method == "GET":
 		return getAllNationalities(request)
@@ -33,7 +33,7 @@ def nationalityRequest(request):
 	else: 
 		return getNationalityByName(request)
 
-
+@csrf_exempt
 def affiliationRequest(request):
 	if request.method == "GET":
 		# Return list of affiliations only
