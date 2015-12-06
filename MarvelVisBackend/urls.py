@@ -33,7 +33,8 @@ urlpatterns = [
     url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'),     
     url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='gender_all'), 
 
-    url()
+    # For Connection URLs
+    url(r'^api/connections/$', FilterManager.connectionsForChar, name='connectionsForChar'), 
 
 
     # For Setting Character Attributes

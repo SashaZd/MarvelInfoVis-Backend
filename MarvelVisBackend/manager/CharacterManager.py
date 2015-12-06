@@ -58,15 +58,7 @@ def setRelations(request):
 
 	# 	if "wiki" in charData and "relatives" in charData["wiki"]:
 	# 		for eachChar in allChars:
-	# 			flagAdd = False
-	# 			if eachChar.name in charData["name"] and eachChar.character_id != charData["id"]: 
-	# 				flagAdd = True
-	# 			elif "real_name" in charData["wiki"] and eachChar.name in charData["wiki"]["real_name"] and eachChar.character_id != charData["id"]: 
-	# 				flagAdd = True
-	# 			elif "aliases" in charData["wiki"] and eachChar.name in charData["wiki"]["aliases"] and eachChar.character_id != charData["id"]: 
-	# 				flagAdd = True
-
-	# 			if flagAdd == True:
+	# 			if eachChar.name in charData["wiki"]["relatives"] and eachChar.character_id != charData["id"]: 
 	# 				relatives.append({
 	# 					"name": eachChar.name,
 	# 					"id": eachChar.character_id 

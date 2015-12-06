@@ -50,10 +50,41 @@ def appearancesRange(request):
 	if request.method == "POST":
 		return getAppearancesWithinRange(request)
 
+@csrf_exempt
+def connectionsForChar(request):
+	if request.method == "POST":
+		return getConnectionsForCharById(request)
+
+
+
 #################################
 # Redirected Methods Below
 #################################
 
+
+def getConnectionsForCharById(request):
+	response_data = []
+	character_id = request.POST.get('character_id', '')
+
+	char1 = Character.objects.filter(character_id=character_id)
+
+	if len(char1) > 0:
+		char1 = char1[0]
+
+		core_family = char1.relationships.all()
+
+		if len(core_family) > 0:
+			for eachFamilyMember in core_family: 
+				response_data.append({
+					"cid1": character_id,
+					"cid2": eachFamilyMember.character_id,
+					"type": "Family",
+					"instances": 1
+				})
+
+	# connectionsForChar = Relationship.objects.filter(from_person_id=character_id)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def getAppearancesWithinRange(request):
 	startRange = request.POST.get('startRange','')
