@@ -90,23 +90,29 @@ def getConnectionsForCharById(request):
 	response_data = []
 	character_id = request.POST.get('character_id', '')
 
-	char1 = Character.objects.filter(character_id=character_id)
+	fromPerson = Character.objects.filter(character_id=character_id)
 
-	if len(char1) > 0:
-		char1 = char1[0]
+	toPeople = Relationship.objects.filter(from_person=fromPerson)
+	fromPeople = Relationship.objects.filter(to_person=fromPerson)
 
-		core_family = char1.relationships.all()
+	for eachRelationship in toPeople:
+		connection = {
+			"cid1": character_id,
+			"cid2": str(eachRelationship.to_person.character_id),
+			"type": eachRelationship.relationship_type,
+			"instances": eachRelationship.strength
+		}
+		response_data.append(connection)
 
-		if len(core_family) > 0:
-			for eachFamilyMember in core_family: 
-				response_data.append({
-					"cid1": character_id,
-					"cid2": eachFamilyMember.character_id,
-					"type": "Family",
-					"instances": 1
-				})
-
-	# connectionsForChar = Relationship.objects.filter(from_person_id=character_id)
+	for eachRelationship in fromPeople:
+		connection = {
+			"cid1": character_id,
+			"cid2": str(eachRelationship.from_person.character_id),
+			"type": eachRelationship.relationship_type,
+			"instances": eachRelationship.strength
+		}
+		if connection not in response_data:
+			response_data.append(connection)
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 

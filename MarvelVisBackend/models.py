@@ -77,6 +77,16 @@ class Character(models.Model):
 		
 		return response_data
 
+	# def get_relationships(self, relationship_type):
+	# 	return self.relationships.filter(
+	# 		to_people__relationship_type=relationship_type,
+	# 		to_people__from_person=self)
+
+	# def get_related_to(self, relationship_type):
+	# 	return self.related_to.filter(
+	# 		from_people__relationship_type=relationship_type,
+	# 		from_people__to_person=self)
+
 	def setAffiliation(self):
 		allChars = json.loads(open("data/affiliation_members.json").read())
 		# self.gender = allChars[str(self.character_id)][0].strip()
@@ -108,13 +118,25 @@ class Character(models.Model):
 		self.save()
 
 
-
-
-
 class Relationship(models.Model):
 	from_person = models.ForeignKey(Character, related_name='from_people')
 	to_person = models.ForeignKey(Character, related_name='to_people')
 	relationship_type = models.CharField(max_length=50)
+	strength = models.CharField(max_length=50)
+
+	def __unicode__(self):
+		name = self.from_person.name + " -- " + self.relationship_type + " -- " + self.to_person
+		return name
+
+	def getResponseData(self):
+		#Create Resposne Dictionary
+		response_data = {}
+		response_data["from_person"] = self.from_person
+		response_data["to_person"] = self.to_person
+		response_data["relationship_type"] = self.relationship_type
+		response_data["strength"] = self.strength
+		
+		return response_data	
 
 
 ######################

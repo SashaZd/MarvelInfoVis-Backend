@@ -10,6 +10,33 @@ from ..models import Affiliations, Character, Relationship, Comic
 
 
 @csrf_exempt
+def setComicConnections(request):
+	response_data = []
+
+
+	response_data = {"warning":"You're trying to recount the relationship strength between characters. This takes 11hrs! If you want to continue, uncomment the entire function setComicChars in CharacterManager, and comment out this line"}
+	# strengthData = json.loads(open("data/RelationshipStrengths.json").read())
+
+	# for eachRelationship in strengthData: 
+	# 	# print eachRelationship, strengthData[eachRelationship]
+	# 	firstChar, secondChar = eachRelationship.split(":")
+
+	# 	firstPersonChar = Character.objects.filter(id=firstChar)[0]
+	# 	secondPersonChar = Character.objects.filter(id=secondChar)[0]
+
+	# 	relationship, created = Relationship.objects.get_or_create(from_person=firstPersonChar, to_person=secondPersonChar, relationship_type="Family")
+	# 	if created == True: 
+	# 		relationship.relationship_type = "Standard"
+	# 	else:
+	# 		relationship.relationship_type = "Family"
+
+	# 	relationship.strength = int(strengthData[eachRelationship]) | 1
+	# 	relationship.save()
+	# 	print firstPersonChar.name, " --- ", secondPersonChar.name
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+@csrf_exempt
 def setConnectionCounts(request):
 	response_data = []
 
