@@ -1,5 +1,5 @@
 # Common Imports for all Manager Files 
-import json
+import json, itertools
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from datetime import datetime, timedelta
@@ -10,6 +10,30 @@ from ..models import Affiliations, Character, Relationship, Comic
 
 
 @csrf_exempt
+def setConnectionCounts(request):
+	response_data = []
+
+	response_data = {"warning":"You're trying to recount the relationship strength between characters. This takes 11hrs! If you want to continue, uncomment the entire function setComicChars in CharacterManager, and comment out this line"}
+	# allRelationships = {}
+
+	# for eachComic in Comic.objects.all():
+	# 	allParticipatingChars = eachComic.character_set.all()
+		
+
+	# 	for eachRelationship in itertools.combinations(allParticipatingChars, 2):
+	# 		key = str(eachRelationship[0].id) + ":" + str(eachRelationship[1].id)
+	# 		if key in allRelationships:
+	# 			allRelationships[key] = allRelationships[key] + 1
+	# 		else:
+	# 			allRelationships[key] = 1
+
+	# 	print eachComic.id, eachComic.title
+
+	# tempOutPut = open("RelationshipStrengths.json", "w")
+	# tempOutPut.write(json.dumps(allRelationships))	
+
+	return HttpResponse(json.dumps(allRelationships), content_type="application/json")
+
 def setComicChars(request):
 	response_data = []
 
@@ -22,7 +46,6 @@ def setComicChars(request):
 	# 		response_data.append(eachChar.name)
 	# else: 
 	# 	response_data = {"error":"There's no data in the Character Table. Did you wipe the database? Uncomment and Run the Affiliations script at the bottom of models.py after the first time you run makemigrations."}
-
 
 	# print "Added EVERY Comic in"
 

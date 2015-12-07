@@ -36,11 +36,15 @@ urlpatterns = [
     # For Connection URLs
     url(r'^api/connections/$', FilterManager.connectionsForChar, name='connectionsForChar'), 
 
+    # For Connection URLs
+    url(r'^api/character/$', FilterManager.getDetailedCharacter, name='connectionsForChar'), 
+
 
     # For Setting Character Attributes
     url(r'^api/gender/set/$', CharacterManager.setGenders, name='set_genders'), 
     url(r'^api/affiliation/set/$', CharacterManager.setAffiliation, name='set_affiliations'), 
     url(r'^api/relations/set/$', CharacterManager.setRelations, name='set_relations'), 
+    url(r'^api/relations/setConnectionCounts/$', CharacterManager.setConnectionCounts, name='set_connectionCounts'), 
     url(r'^api/comic_characters/set/$', CharacterManager.setComicChars, name='set_comicChars'), 
 
 ]

@@ -1,5 +1,5 @@
 # Common Imports for all Manager Files 
-import json
+import json, random
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from datetime import datetime, timedelta
@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.db.models import Avg, Max, Min
 
 # Other Imports
-from ..models import Affiliations, Character, Relationship
+from ..models import Affiliations, Character, Relationship, Comic
 
 
 @csrf_exempt
@@ -55,12 +55,36 @@ def connectionsForChar(request):
 	if request.method == "POST":
 		return getConnectionsForCharById(request)
 
+@csrf_exempt
+def getDetailedCharacter(request):
+	if request.method == "POST":
+		return getCharacterById(request)
 
 
 #################################
 # Redirected Methods Below
 #################################
 
+def getCharacterById(request):
+	response_data = []
+	character_id = request.POST.get('character_id','')
+
+	findChars = Character.objects.filter(character_id=character_id)
+	if len(findChars) > 0:
+		character = findChars[0]
+		response_data = character.getResponseData()
+
+		comics = Comic.objects.filter(character=character)
+		response_data["comic"] = random.choice(comics).getResponseData()
+
+		affiliations = Affiliations.objects.filter(character=character)
+		response_data["affiliations"] = []
+		for eachAffiliation in affiliations:
+			response_data["affiliations"].append(eachAffiliation.title)
+		
+
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def getConnectionsForCharById(request):
 	response_data = []
@@ -231,3 +255,15 @@ def getAffiliationByName(request):
 		response_data = {"error":"There's no data in the Affiliations Table. Did you wipe the database? Uncomment and Run the Affiliations script at the bottom of models.py after the first time you run makemigrations."}
 	
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+"""
+Default Method: 
+def defaultMethod(request):
+	response_data = []
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+"""
+
+
+
