@@ -34,10 +34,6 @@ def getAllComicsData():
 	listOfComicFiles = open("data/allComics.txt")
 
 
-
-
-
-
 def getAffiliationMembers():
 	affilationList = json.loads(open("data/affiliations_all.json").read())
 	charAffs = {}

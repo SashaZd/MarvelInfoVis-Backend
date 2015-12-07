@@ -6,10 +6,29 @@ from datetime import datetime, timedelta
 
 
 # Other Imports
-from ..models import Affiliations, Character, Relationship
+from ..models import Affiliations, Character, Relationship, Comic
 
 
 @csrf_exempt
+def setComicChars(request):
+	response_data = []
+
+	response_data = {"warning":"You're trying to add all the comics into the database from scratch. This takes 11hrs! If you want to continue, uncomment the entire function setComicChars in CharacterManager, and comment out this line"}
+
+	# allChars = Character.objects.all()
+	# if len(allChars) > 0:
+	# 	for eachChar in allChars:
+	# 		eachChar.setComics()
+	# 		response_data.append(eachChar.name)
+	# else: 
+	# 	response_data = {"error":"There's no data in the Character Table. Did you wipe the database? Uncomment and Run the Affiliations script at the bottom of models.py after the first time you run makemigrations."}
+
+
+	# print "Added EVERY Comic in"
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
 def setGenders(request):
 	response_data = []
 
