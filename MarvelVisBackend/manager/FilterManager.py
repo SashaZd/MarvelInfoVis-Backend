@@ -330,62 +330,72 @@ def getConnectionsForCharById(request):
 	toPeople = Relationship.objects.filter(from_person=fromPerson)
 	fromPeople = Relationship.objects.filter(to_person=fromPerson)
 
-	toAllPeople = set()
+	# toAllPeople = set()
 
-	for eachRelationship in toPeople: 
-		toAllPeople.add(eachRelationship.id)
-	for eachRelationship in fromPeople:
-		toAllPeople.add(eachRelationship.id)
+	# for eachRelationship in toPeople: 
+	# 	toAllPeople.add(eachRelationship.id)
+	# for eachRelationship in fromPeople:
+	# 	toAllPeople.add(eachRelationship.id)
 
-	toAllPeople = list(toAllPeople)
-	allConnections = Relationship.objects.filter(id__in=toAllPeople)
+	# toAllPeople = list(toAllPeople)
+	# allConnections = Relationship.objects.filter(id__in=toAllPeople)
 
-	for eachRelationship in allConnections:
-		otherPerson = ""
-		if eachRelationship.from_person == fromPerson: 
-			otherPerson = eachRelationship.to_person
-		else:
-			otherPerson = eachRelationship.from_person
+	# for eachRelationship in allConnections:
+	# 	otherPerson = ""
+	# 	if eachRelationship.from_person == fromPerson: 
+	# 		otherPerson = eachRelationship.to_person
+	# 	else:
+	# 		otherPerson = eachRelationship.from_person
 
-		if eachRelationship.strength > 0:
-			comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
-			print comic["title"]
-		else:
-			comic = {}
-
-		connection = {
-			"cid1": character_id,
-			"cid2": str(eachRelationship.to_person.character_id),
-			"type": eachRelationship.relationship_type,
-			"instances": eachRelationship.strength,
-			"comic": comic
-		}
-
-		response_data.append(connection)
-
-
-	# for eachRelationship in toPeople:
 	# 	if eachRelationship.strength > 0:
-	# 		comic = random.choice(Comic.objects.filter(character=fromPerson).filter(character=eachRelationship))
+	# 		comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
+	# 		print comic["title"]
+	# 	else:
+	# 		comic = {}
 
 	# 	connection = {
 	# 		"cid1": character_id,
 	# 		"cid2": str(eachRelationship.to_person.character_id),
 	# 		"type": eachRelationship.relationship_type,
-	# 		"instances": eachRelationship.strength
+	# 		"instances": eachRelationship.strength,
+	# 		"comic": comic
 	# 	}
+
 	# 	response_data.append(connection)
 
-	# for eachRelationship in fromPeople:
 
-	# 	connection = {
-	# 		"cid1": character_id,
-	# 		"cid2": str(eachRelationship.from_person.character_id),
-	# 		"type": eachRelationship.relationship_type,
-	# 		"instances": eachRelationship.strength
-	# 	}
-	# 	if connection not in response_data:
-	# 		response_data.append(connection)
+	for eachRelationship in toPeople:
+		if eachRelationship.strength > 0:
+			comic = random.choice(Comic.objects.filter(character=fromPerson).filter(character=eachRelationship))
+
+		connection = {
+			"cid1": character_id,
+			"cid2": str(eachRelationship.to_person.character_id),
+			"type": eachRelationship.relationship_type,
+			"instances": eachRelationship.strength
+		}
+		if connection["instances"] > 0:
+			comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
+			connection["comic"] = comic
+		else:
+			connection["comic"] = {}
+		response_data.append(connection)
+
+	for eachRelationship in fromPeople:
+
+		connection = {
+			"cid1": character_id,
+			"cid2": str(eachRelationship.from_person.character_id),
+			"type": eachRelationship.relationship_type,
+			"instances": eachRelationship.strength
+		}
+		if connection not in response_data:
+			if connection["instances"] > 0:
+				comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
+				connection["comic"] = comic
+			else:
+				connection["comic"] = {}
+			response_data.append(connection)
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
