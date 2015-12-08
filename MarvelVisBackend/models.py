@@ -119,7 +119,7 @@ class Relationship(models.Model):
 	strength = models.CharField(max_length=50)
 
 	def __unicode__(self):
-		name = self.from_person.name + " -- " + self.relationship_type + " -- " + self.to_person
+		name = self.from_person.name + " -- " + self.relationship_type + " -- " + self.to_person.name
 		return name
 
 	def getResponseData(self):
