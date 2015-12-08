@@ -20,7 +20,7 @@ from manager import CharacterManager, FilterManager
 
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    # url(r'^admin/', include(admin.site.urls)),
 
     # CharacterManager API Calls
 	# url(r'^api/character/$', CharacterManager.charRequest, name='charrequest'),
@@ -31,9 +31,9 @@ urlpatterns = [
 
     url(r'^api/filter/affiliation/$', FilterManager.affiliationRequest, name='affiliations_all'), 
     url(r'^api/filter/nationality/$', FilterManager.nationalityRequest, name='nationality_all'), 
-    url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='nationality_all'), 
+    url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='year_introduced_all'), 
     url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'),     
-    url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='gender_all'), 
+    url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='appearances_all'), 
 
     # For Connection URLs
     url(r'^api/connections/$', FilterManager.connectionsForChar, name='connections_char'), 
