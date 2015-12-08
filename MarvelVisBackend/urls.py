@@ -41,6 +41,8 @@ urlpatterns = [
     # Get Detailed Character
     url(r'^api/character/$', FilterManager.getDetailedCharacter, name='detailed_character'), 
 
+    url(r'^api/comic/random/$', FilterManager.getCommonRandomComic, name='random_common_comic'),     
+
 
     # For Setting Character Attributes
     # url(r'^api/gender/set/$', CharacterManager.setGenders, name='set_genders'), 

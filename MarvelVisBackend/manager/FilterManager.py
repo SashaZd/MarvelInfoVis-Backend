@@ -68,9 +68,39 @@ def filterAll(request):
 		return useAllFilters(request)
 
 
+@csrf_exempt
+def getCommonRandomComic(request):
+	if request.method == "POST":
+		return getRandomCommonComicForChars(request)
+
 #################################
 # Redirected Methods Below
 #################################
+
+def getRandomCommonComicForChars(request):
+	response_data = {}
+
+	firstChar = request.POST.get('firstChar', None)
+	secondChar = request.POST.get('secondChar', None)
+
+	if not firstChar and not secondChar: 
+		allComics = Comic.objects.all()
+		response_data = random.choice(allComics).getResponseData()
+
+	if firstChar and not secondChar:
+		firstChar = Character.objects.filter(character_id=firstChar)
+		comics = Comic.objects.filter(character=firstChar)
+		response_data = random.choice(comics).getResponseData()
+
+	if firstChar and secondChar: 
+		firstChar = Character.objects.filter(character_id=firstChar)
+		secondChar = Character.objects.filter(character_id=secondChar)
+		comics = Comic.objects.filter(character=firstChar).filter(character=secondChar)
+		response_data = random.choice(comics).getResponseData()
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
 
 def useAllFilters(request):
 
