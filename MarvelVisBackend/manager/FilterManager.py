@@ -308,12 +308,16 @@ def getCharacterById(request):
 		response_data = character.getResponseData()
 
 		comics = Comic.objects.filter(character=character)
-		response_data["comic"] = random.choice(comics).getResponseData()
+		if len(comics) > 0:
+			response_data.append["comic"] = random.choice(comics).getResponseData()
 
 		affiliations = Affiliations.objects.filter(character=character)
 		response_data["affiliations"] = []
 		for eachAffiliation in affiliations:
 			response_data["affiliations"].append(eachAffiliation.title)
+
+	else:
+		response_data = {error:"Warning: Hydra Infiltration. Page unavailable while attack under enemy forces. \nMake sure you typed in the correct character_id and resend this request"}
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
