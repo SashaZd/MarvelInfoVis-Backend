@@ -95,6 +95,15 @@ def getRandomCommonComicForChars(request):
 	elif firstChar and secondChar: 
 		firstChar = Character.objects.filter(character_id=firstChar)
 		secondChar = Character.objects.filter(character_id=secondChar)
+
+		comic1 = Comic.objects.filter(character=firstChar)
+		comic2 = Comic.objects.filter(character=secondChar)
+
+		for eachComic in comic1:
+			if eachComic in comic2:
+				response_data = eachComic.getResponseData()
+				return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 		comics = Comic.objects.filter(character=firstChar).filter(character=secondChar)
 		response_data = random.choice(comics).getResponseData()
 
