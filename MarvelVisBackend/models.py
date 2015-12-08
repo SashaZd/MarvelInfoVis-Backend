@@ -81,16 +81,6 @@ class Character(models.Model):
 		
 		return response_data
 
-	# def get_relationships(self, relationship_type):
-	# 	return self.relationships.filter(
-	# 		to_people__relationship_type=relationship_type,
-	# 		to_people__from_person=self)
-
-	# def get_related_to(self, relationship_type):
-	# 	return self.related_to.filter(
-	# 		from_people__relationship_type=relationship_type,
-	# 		from_people__to_person=self)
-
 	def setAffiliation(self):
 		allChars = json.loads(open("data/affiliation_members.json").read())
 		# self.gender = allChars[str(self.character_id)][0].strip()
