@@ -396,41 +396,18 @@ def getAppearancesWithinRange(request):
 		print endRange
 
 	response_data = []
-	# response_data["characters"] = []
-	# response_data["filters"] = {}
-	# response_data["filters"]["gender"] = []
-	# response_data["filters"]["nationality"] = []
-	# response_data["filters"]["appearances"] = []
-	# response_data["filters"]["intro_year"] = []
-	# response_data["filters"]["affiliations"] = []
-
 
 	appearances = Character.objects.all().filter(appearances__range=(startRange, endRange)).order_by('-appearances')
 
+	members = []
 	for eachChar in appearances:
-		# eachChar = Character.objects.filter(id=eachCharId)[0]
 
-	# for eachChar in shortlistedChars:
-		# response_data["characters"].append(eachChar.getResponseData())
-		# if eachChar.gender not in response_data["filters"]["gender"]:
-		# 	response_data["filters"]["gender"].append(eachChar.gender)
-		# if eachChar.nationality not in response_data["filters"]["nationality"]:
-		# 	response_data["filters"]["nationality"].append(eachChar.nationality)
-		# if eachChar.appearances not in response_data["filters"]["appearances"]:
-		# 	response_data["filters"]["appearances"].append(eachChar.appearances)
-		# if eachChar.intro_year not in response_data["filters"]["intro_year"]:
-		# 	response_data["filters"]["intro_year"].append(eachChar.intro_year)
+
+
+
 		
-		# for eachAffiliation in eachChar.affiliations.all():
-		# 	if eachAffiliation.title not in response_data["filters"]["affiliations"]:
-		# 		response_data["filters"]["affiliations"].append(eachAffiliation.title)
-
-
-		response_data.append(eachChar.getResponseData())
-
-
 		# print eachChar.appearances
-		# response_data.append(eachChar.getResponseData())
+		response_data.append(eachChar.getResponseData())
 
 	# if len(members) > 0:
 	# 	response_data.extend(members)
