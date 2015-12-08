@@ -90,19 +90,21 @@ def useAllFilters(request):
 	nationality = request.POST.get('nationality', None)
 	intro_year_min = request.POST.get('intro_year_min', None)
 	intro_year_max = request.POST.get('intro_year_max', None)
+	affiliation = request.POST.get('affiliation', None)
 
-	if not name and not appearances_min and not appearances_max and not gender and not nationality and not intro_year_min and not intro_year_max:
+	if not name and not appearances_min and not appearances_max and not gender and not nationality and not intro_year_min and not intro_year_max and not affiliation:
 		return getAllCharactersFromDB()
 
-	set_appearance, set_nationality, set_introYear = set(), set(), set()
-	gender_flag, nationality_flag, introYear_flag = False, False, False
-
 	set_name, name_flag = utilFilterName(name)
+	set_affiliation, affiliation_flag = utilFilterAffiliation(affiliation)
 	set_gender, gender_flag = utilFilterGender(gender)
 	set_nationality, nationality_flag = utilFilterNationality(nationality)
 	set_appearance = utilFilterAppearances(appearances_min, appearances_max)
 	set_introYear = utilFilterIntroYear(intro_year_min, intro_year_max)
 	
+	
+
+
 	allChars = Character.objects.all()
 	universalSet = set()
 	for eachChar in allChars:
@@ -110,6 +112,8 @@ def useAllFilters(request):
 
 	if name_flag:
 		universalSet = universalSet & set_name
+	if affiliation_flag: 
+		universalSet = universalSet & set_affiliation
 	if gender_flag:
 		universalSet = universalSet & set_gender
 	if nationality_flag:
@@ -158,6 +162,21 @@ def utilFilterName(name):
 			set_name.add(eachChar.id)
 
 	return set_name, name_flag
+
+
+def utilFilterAffiliation(affiliation):
+	set_affiliation = set()
+	affiliation_flag = False
+
+	if affiliation: 
+		affiliation_filteredChars = Affiliations.objects.filter(title__icontains=affiliation)
+		for eachAffiliation in affiliation_filteredChars:
+			characters = eachAffiliation.character_set.all()
+			for eachChar in characters:
+				set_affiliation.add(eachChar.id)
+		affiliation_flag = True
+
+	return set_affiliation, affiliation_flag
 
 
 def utilFilterGender(gender):
@@ -265,8 +284,6 @@ def getCharacterById(request):
 		response_data["affiliations"] = []
 		for eachAffiliation in affiliations:
 			response_data["affiliations"].append(eachAffiliation.title)
-		
-
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
