@@ -91,6 +91,9 @@ def useAllFilters(request):
 	intro_year_min = request.POST.get('intro_year_min', None)
 	intro_year_max = request.POST.get('intro_year_max', None)
 
+	if not name and not appearances_min and not appearances_max and not gender and not nationality and not intro_year_min and not intro_year_max:
+		return getAllCharactersFromDB()
+
 	set_appearance, set_nationality, set_introYear = set(), set(), set()
 	gender_flag, nationality_flag, introYear_flag = False, False, False
 
@@ -216,6 +219,35 @@ def utilFilterIntroYear(intro_year_min, intro_year_max):
 #####################################################
 #####################################################
 #####################################################
+
+def getAllCharactersFromDB():
+	response_data = {}
+	response_data["characters"] = []
+	response_data["filters"] = {}
+	response_data["filters"]["gender"] = []
+	response_data["filters"]["nationality"] = []
+	response_data["filters"]["appearances"] = []
+	response_data["filters"]["intro_year"] = []
+	response_data["filters"]["affiliations"] = []
+	allChars = Character.objects.all()
+
+	for eachChar in allChars:
+		response_data["characters"].append(eachChar.getResponseData())
+		if eachChar.gender not in response_data["filters"]["gender"]:
+			response_data["filters"]["gender"].append(eachChar.gender)
+		if eachChar.nationality not in response_data["filters"]["nationality"]:
+			response_data["filters"]["nationality"].append(eachChar.nationality)
+		if eachChar.appearances not in response_data["filters"]["appearances"]:
+			response_data["filters"]["appearances"].append(eachChar.appearances)
+		if eachChar.intro_year not in response_data["filters"]["intro_year"]:
+			response_data["filters"]["intro_year"].append(eachChar.intro_year)
+		
+		for eachAffiliation in eachChar.affiliations.all():
+			if eachAffiliation.title not in response_data["filters"]["affiliations"]:
+				response_data["filters"]["affiliations"].append(eachAffiliation.title)
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 def getCharacterById(request):
 	response_data = []
