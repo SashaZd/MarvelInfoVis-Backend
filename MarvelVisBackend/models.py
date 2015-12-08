@@ -53,6 +53,8 @@ class Character(models.Model):
 	intro_year = models.CharField(max_length=10)
 	image = models.CharField(max_length=100)
 	bio_desc = models.CharField(max_length=150)
+	aliases = models.CharField(max_length=150)
+	url = models.CharField(max_length=150)
 
 	# Relationships & Many-Many Fields 
 	affiliations = models.ManyToManyField(Affiliations)
@@ -74,6 +76,8 @@ class Character(models.Model):
 		response_data["intro_year"] = self.intro_year
 		response_data["bio_desc"] = self.bio_desc
 		response_data["image"] = self.image
+		response_data["aliases"] = self.aliases
+		response_data["url"] = self.url
 		
 		return response_data
 
@@ -239,8 +243,37 @@ for eachComicFile in listOfComicFiles:
 	newComic.save()
 
 """
+"""
+#Add Aliases into Database
+aliasesDict = json.loads(open("data/MarvelCharacters_Aliases.json").read())
+for eachKey in aliasesDict:
+	filteredChars = Character.objects.filter(name__icontains=aliasesDict[eachKey])
+	if len(filteredChars)>0:
+		character = filteredChars[0]
+		if character.aliases == None or character.aliases == "":
+			character.aliases = eachKey
+		elif eachKey not in character.aliases:
+			character.aliases += ", " + eachKey
+		character.save()
+"""
 
 
+"""
+#Add Detail URLs into Database
+listOfCharsFiles = open("data/charactersList.txt")
+CHAR_BASE_LINK = "data/characters/"
+
+for eachCharFile in listOfCharsFiles: 
+	filePath = CHAR_BASE_LINK+eachCharFile.strip()
+	charData = json.loads(open(filePath).read())
+
+	character = Character.objects.filter(character_id=charData["id"])[0]
+
+	if "urls" in charData: 
+		character.url = charData["urls"][0]["url"]
+		character.save()
+
+"""
 
 
 
