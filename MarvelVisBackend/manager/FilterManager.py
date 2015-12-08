@@ -402,10 +402,6 @@ def getAppearancesWithinRange(request):
 	members = []
 	for eachChar in appearances:
 
-
-
-
-		
 		# print eachChar.appearances
 		response_data.append(eachChar.getResponseData())
 
