@@ -87,12 +87,12 @@ def getRandomCommonComicForChars(request):
 		allComics = Comic.objects.all()
 		response_data = random.choice(allComics).getResponseData()
 
-	if firstChar and not secondChar:
+	elif firstChar and not secondChar:
 		firstChar = Character.objects.filter(character_id=firstChar)
 		comics = Comic.objects.filter(character=firstChar)
 		response_data = random.choice(comics).getResponseData()
 
-	if firstChar and secondChar: 
+	elif firstChar and secondChar: 
 		firstChar = Character.objects.filter(character_id=firstChar)
 		secondChar = Character.objects.filter(character_id=secondChar)
 		comics = Comic.objects.filter(character=firstChar).filter(character=secondChar)
