@@ -131,9 +131,8 @@ def useAllFilters(request):
 	set_nationality, nationality_flag = utilFilterNationality(nationality)
 	set_appearance = utilFilterAppearances(appearances_min, appearances_max)
 	set_introYear = utilFilterIntroYear(intro_year_min, intro_year_max)
-	
-	
 
+	print len(set_name),len(set_affiliation),len(set_gender),len(set_nationality),len(set_appearance),len(set_introYear)
 
 	allChars = Character.objects.all()
 	universalSet = set()
@@ -142,18 +141,40 @@ def useAllFilters(request):
 
 	if name_flag:
 		universalSet = universalSet & set_name
+
 	if affiliation_flag: 
 		universalSet = universalSet & set_affiliation
+
 	if gender_flag:
 		universalSet = universalSet & set_gender
+
 	if nationality_flag:
 		universalSet = universalSet & set_nationality
 	
 	universalSet = universalSet & set_appearance & set_introYear
 	universalSet = list(universalSet)
 
-	shortlistedChars = Character.objects.filter(id__in=universalSet)
-	responseData = utilShortlistedBuildResponse(response_data, shortlistedChars)
+
+	print len(universalSet), len(set_appearance)
+	# shortlistedChars = Character.objects.filter(id__in=universalSet)
+
+	for eachCharId in universalSet:
+		eachChar = Character.objects.filter(id=eachCharId)[0]
+
+	# for eachChar in shortlistedChars:
+		response_data["characters"].append(eachChar.getResponseData())
+		if eachChar.gender not in response_data["filters"]["gender"]:
+			response_data["filters"]["gender"].append(eachChar.gender)
+		if eachChar.nationality not in response_data["filters"]["nationality"]:
+			response_data["filters"]["nationality"].append(eachChar.nationality)
+		if eachChar.appearances not in response_data["filters"]["appearances"]:
+			response_data["filters"]["appearances"].append(eachChar.appearances)
+		if eachChar.intro_year not in response_data["filters"]["intro_year"]:
+			response_data["filters"]["intro_year"].append(eachChar.intro_year)
+		
+		for eachAffiliation in eachChar.affiliations.all():
+			if eachAffiliation.title not in response_data["filters"]["affiliations"]:
+				response_data["filters"]["affiliations"].append(eachAffiliation.title)
 	
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -236,7 +257,7 @@ def utilFilterNationality(nationality):
 
 def utilFilterAppearances(appearances_min, appearances_max):
 	set_appearance = set()
-
+	
 	if not appearances_min:
 		appearances_min = Character.objects.aggregate(Min('appearances'))["appearances__min"]
 	if not appearances_max: 
