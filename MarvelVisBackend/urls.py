@@ -38,8 +38,8 @@ urlpatterns = [
     # For Connection URLs
     url(r'^api/connections/$', FilterManager.connectionsForChar, name='connections_char'), 
 
-
-    # Get Detailed Character
+        
+    # Get Detailed Character   
     url(r'^api/character/$', FilterManager.getDetailedCharacter, name='detailed_character'), 
 
     url(r'^api/comic/random/$', FilterManager.getCommonRandomComic, name='random_common_comic'),     
