@@ -339,7 +339,6 @@ def getConnectionsForCharById(request):
 
 	toAllPeople = list(toAllPeople)
 	allConnections = Relationship.objects.filter(id__in=toAllPeople)
-	print len(allConnections)
 
 	for eachRelationship in allConnections:
 		otherPerson = ""
@@ -348,7 +347,6 @@ def getConnectionsForCharById(request):
 		else:
 			otherPerson = eachRelationship.from_person
 
-		print otherPerson.name
 		if eachRelationship.strength > 0:
 			comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
 			print comic["title"]
