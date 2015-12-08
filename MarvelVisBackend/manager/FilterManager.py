@@ -365,18 +365,15 @@ def getConnectionsForCharById(request):
 
 
 	for eachRelationship in toPeople:
-		if eachRelationship.strength > 0:
-			comic = random.choice(Comic.objects.filter(character=fromPerson).filter(character=eachRelationship))
-
 		connection = {
 			"cid1": character_id,
 			"cid2": str(eachRelationship.to_person.character_id),
 			"type": eachRelationship.relationship_type,
 			"instances": eachRelationship.strength
 		}
-		if connection["instances"] > 0:
-			comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
-			connection["comic"] = comic
+		comic = Comic.objects.filter(character=fromPerson).filter(character=eachRelationship.from_person)
+		if len(comic) > 0:
+				connection["comic"] = random.choice(comic).getResponseData()	
 		else:
 			connection["comic"] = {}
 		response_data.append(connection)
@@ -390,9 +387,9 @@ def getConnectionsForCharById(request):
 			"instances": eachRelationship.strength
 		}
 		if connection not in response_data:
-			if connection["instances"] > 0:
-				comic = Comic.objects.filter(character=fromPerson).filter(character=otherPerson)[0].getResponseData()
-				connection["comic"] = comic
+			comic = Comic.objects.filter(character=fromPerson).filter(character=eachRelationship.from_person)
+			if len(comic) > 0:
+					connection["comic"] = random.choice(comic).getResponseData()	
 			else:
 				connection["comic"] = {}
 			response_data.append(connection)
