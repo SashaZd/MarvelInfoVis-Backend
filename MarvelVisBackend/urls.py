@@ -27,6 +27,8 @@ urlpatterns = [
 	# url(r'^api/character/(?P<character_id>\d*)/$', CharacterManager.charRequest, name='chardata'),
 
     # For Filters
+    url(r'^api/filter/all/$', FilterManager.filterAll, name='filter_all'),     
+
     url(r'^api/filter/affiliation/$', FilterManager.affiliationRequest, name='affiliations_all'), 
     url(r'^api/filter/nationality/$', FilterManager.nationalityRequest, name='nationality_all'), 
     url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='nationality_all'), 

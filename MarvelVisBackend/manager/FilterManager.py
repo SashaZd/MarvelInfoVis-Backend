@@ -1,5 +1,6 @@
 # Common Imports for all Manager Files 
 import json, random
+from sets import Set
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from datetime import datetime, timedelta
@@ -61,9 +62,160 @@ def getDetailedCharacter(request):
 		return getCharacterById(request)
 
 
+@csrf_exempt
+def filterAll(request):
+	if request.method == "POST":
+		return useAllFilters(request)
+
+
 #################################
 # Redirected Methods Below
 #################################
+
+def useAllFilters(request):
+
+	response_data = {}
+	response_data["characters"] = []
+	response_data["filters"] = {}
+	response_data["filters"]["gender"] = []
+	response_data["filters"]["nationality"] = []
+	response_data["filters"]["appearances"] = []
+	response_data["filters"]["intro_year"] = []
+	response_data["filters"]["affiliations"] = []
+
+	name = request.POST.get('name', None)
+	appearances_min = request.POST.get('appearances_min', None)
+	appearances_max = request.POST.get('appearances_max', None)
+	gender = request.POST.get('gender', None)
+	nationality = request.POST.get('nationality', None)
+	intro_year_min = request.POST.get('intro_year_min', None)
+	intro_year_max = request.POST.get('intro_year_max', None)
+
+	set_appearance, set_nationality, set_introYear = set(), set(), set()
+	gender_flag, nationality_flag, introYear_flag = False, False, False
+
+	set_name, name_flag = utilFilterName(name)
+	set_gender, gender_flag = utilFilterGender(gender)
+	set_nationality, nationality_flag = utilFilterNationality(nationality)
+	set_appearance = utilFilterAppearances(appearances_min, appearances_max)
+	set_introYear = utilFilterIntroYear(intro_year_min, intro_year_max)
+	
+	allChars = Character.objects.all()
+	universalSet = set()
+	for eachChar in allChars:
+		universalSet.add(eachChar.id)
+
+	if name_flag:
+		universalSet = universalSet & set_name
+	if gender_flag:
+		universalSet = universalSet & set_gender
+	if nationality_flag:
+		universalSet = universalSet & set_nationality
+	
+	universalSet = universalSet & set_appearance & set_introYear
+	universalSet = list(universalSet)
+
+	shortlistedChars = Character.objects.filter(id__in=universalSet)
+	responseData = utilShortlistedBuildResponse(response_data, shortlistedChars)
+	
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+#####################################################
+#####################################################
+#####################################################
+
+def utilShortlistedBuildResponse(response_data, shortlistedChars):
+	for eachChar in shortlistedChars:
+		response_data["characters"].append(eachChar.getResponseData())
+		if eachChar.gender not in response_data["filters"]["gender"]:
+			response_data["filters"]["gender"].append(eachChar.gender)
+		if eachChar.nationality not in response_data["filters"]["nationality"]:
+			response_data["filters"]["nationality"].append(eachChar.nationality)
+		if eachChar.appearances not in response_data["filters"]["appearances"]:
+			response_data["filters"]["appearances"].append(eachChar.appearances)
+		if eachChar.intro_year not in response_data["filters"]["intro_year"]:
+			response_data["filters"]["intro_year"].append(eachChar.intro_year)
+		
+		for eachAffiliation in eachChar.affiliations.all():
+			if eachAffiliation.title not in response_data["filters"]["affiliations"]:
+				response_data["filters"]["affiliations"].append(eachAffiliation.title)
+
+	return response_data
+
+def utilFilterName(name):
+	set_name = set()
+	name_flag = False
+
+	if name:
+		name_filteredChars = Character.objects.filter(name__icontains=name)
+		name_flag = True
+		for eachChar in name_filteredChars:
+			set_name.add(eachChar.id)
+
+	return set_name, name_flag
+
+
+def utilFilterGender(gender):
+	set_gender = set()
+	gender_flag = False
+
+	if gender:
+		gender_filteredChars = Character.objects.filter(gender=gender)
+		gender_flag = True
+		for eachChar in gender_filteredChars:
+			set_gender.add(eachChar.id)
+
+	return set_gender, gender_flag
+
+
+def utilFilterNationality(nationality):
+	set_nationality = set()
+	nationality_flag = False
+
+	if nationality:
+		nationality_filteredChars = Character.objects.filter(nationality__icontains=nationality)
+		nationality_flag = True
+		for eachChar in nationality_filteredChars:
+			set_nationality.add(eachChar.id)
+
+	return set_nationality, nationality_flag
+
+def utilFilterAppearances(appearances_min, appearances_max):
+	set_appearance = set()
+
+	if not appearances_min:
+		appearances_min = Character.objects.aggregate(Min('appearances'))["appearances__min"]
+	if not appearances_max: 
+		appearances_max = Character.objects.aggregate(Max('appearances'))["appearances__max"]
+
+	appearances_filteredChars = Character.objects.filter(appearances__range=(appearances_min, appearances_max))
+	for eachChar in appearances_filteredChars:
+		set_appearance.add(eachChar.id)
+
+	return set_appearance
+
+
+def utilFilterIntroYear(intro_year_min, intro_year_max):
+	set_introYear = set()
+
+	if not intro_year_min:
+		intro_year_min = Character.objects.aggregate(Min('intro_year'))["intro_year__min"]
+	if not intro_year_max: 
+		intro_year_max = Character.objects.aggregate(Max('intro_year'))["intro_year__max"]
+
+	intro_year_filteredChars = Character.objects.filter(intro_year__range=(intro_year_min, intro_year_max))
+	for eachChar in intro_year_filteredChars:
+		set_introYear.add(eachChar.id)
+
+	return set_introYear
+
+
+
+#####################################################
+#####################################################
+#####################################################
 
 def getCharacterById(request):
 	response_data = []
