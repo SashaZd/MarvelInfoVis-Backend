@@ -384,25 +384,29 @@ def getConnectionsForCharById(request):
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def getAppearancesWithinRange(request):
-	startRange = request.POST.get('startRange','')
-	endRange = request.POST.get('endRange','')
+	startRange = request.POST.get('appearances_min','')
+	endRange = request.POST.get('appearances_max','')
 
 	if startRange == '':
-		startRange = Character.objects.aggregate(Min('appearances'))["appearances__min"]
+		startRange = Character.objects.all().aggregate(Min('appearances'))["appearances__min"]
+		print startRange
 
 	if endRange == '': 
 		endRange = Character.objects.aggregate(Max('appearances'))["appearances__max"]
+		print endRange
 
 	response_data = []
 
-	appearances = Character.objects.filter(appearances__range=(startRange, endRange))
+	appearances = Character.objects.all().filter(appearances__range=(startRange, endRange)).order_by('-appearances')
 
 	members = []
 	for eachChar in appearances:
-		members.append(eachChar.getResponseData())
+		# print eachChar.appearances
+		response_data.append(eachChar.getResponseData())
 
-	if len(members) > 0:
-		response_data.extend(members)
+	# if len(members) > 0:
+	# 	response_data.extend(members)
+
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
 
