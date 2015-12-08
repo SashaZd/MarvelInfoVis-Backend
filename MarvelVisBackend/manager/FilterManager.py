@@ -309,7 +309,7 @@ def getCharacterById(request):
 
 		comics = Comic.objects.filter(character=character)
 		if len(comics) > 0:
-			response_data.append["comic"] = random.choice(comics).getResponseData()
+			response_data["comic"] = random.choice(comics).getResponseData()
 
 		affiliations = Affiliations.objects.filter(character=character)
 		response_data["affiliations"] = []
