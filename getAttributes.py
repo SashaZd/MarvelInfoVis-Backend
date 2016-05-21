@@ -8,7 +8,6 @@ COMICS_BASE_LINK = "data/comics/"
 wikiData = json.loads(open("data/wikiData.json").read())
 
 
-
 def getAllRelationships():
 	charRels = {}
 
@@ -162,7 +161,7 @@ def getAllUniqueCitizenships():
 	listOfCitizenshipsFile.write(json.dumps(citizenships_List))
 
 
-def getAllUniqueAffiliations(): 
+def getAllAffiliations(): 
 	# Some manual cleaning up of the data was also done. So do not run this again unless absolutely necessary
 	listOfAffiliations = []
 	for eachCharFile in listOfCharsFiles: 
@@ -192,8 +191,33 @@ def getAllUniqueAffiliations():
 	listOfAffiliationsFile.write(json.dumps(listOfAffiliations))
 
 
+def getUniqueAffiliations():
+	listOfAffiliations = json.loads(open("data/affiliations_all.json", "r").read())
 
-# getAllRelationships()
+	affiliations = []
+	uniqueAffiliations = []
+
+	for newAffiliation in listOfAffiliations:
+		aff_alias = set(newAffiliation.strip().split("|"))
+		flagAddNew = True
+		for index, eachAffiliation in enumerate(affiliations):
+			if eachAffiliation & aff_alias:
+				affiliations[index] = eachAffiliation | aff_alias
+				flagAddNew = False
+				break
+		if flagAddNew:
+			affiliations.append(aff_alias)
+
+	for eachAffiliation in affiliations:
+		uniqueAffiliations.append(str('|'.join(sorted(eachAffiliation))))
+
+	print uniqueAffiliations
+
+	open("data/affiliations_all.json", "w").write(uniqueAffiliations)
+
+
+
+# getUniqueAffiliations()
 
 
 

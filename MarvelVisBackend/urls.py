@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^api/filter/year_introduced/$', FilterManager.yearIntroducedRequest, name='year_introduced_all'), 
     url(r'^api/filter/gender/$', FilterManager.genderRequest, name='gender_all'),     
     url(r'^api/filter/appearances/$', FilterManager.appearancesRange, name='appearances_all'), 
+    url(r'^api/filter/comics/$', FilterManager.comicRequest, name='comics_random'), 
 
     # For Connection URLs
     url(r'^api/connections/$', FilterManager.connectionsForChar, name='connections_char'), 

@@ -73,6 +73,14 @@ def getCommonRandomComic(request):
 	if request.method == "POST":
 		return getRandomCommonComicForChars(request)
 
+@csrf_exempt
+def comicRequest(request):
+	if request.method == "GET":
+		return getRandomComic(request)
+
+	else: 
+		return getComicByTitle(request)
+
 #################################
 # Redirected Methods Below
 #################################
@@ -419,6 +427,29 @@ def getAppearancesWithinRange(request):
 
 
 	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def getRandomComic(request):
+	response_data = []
+	allComics = Comic.objects.all()
+	response_data = random.choice(allComics).getResponseData()
+	
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def getComicByTitle(request):
+	response_data = []
+	title =  request.POST.get('title','')
+	comics = Comic.objects.filter(title__icontains=title)
+
+	if len(comics) > 0:
+		for eachComic in comics:
+			response_data.append(eachComic.getResponseData())
+			print eachComic.title
+
+
+	return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 
 def getAllGenders(request):

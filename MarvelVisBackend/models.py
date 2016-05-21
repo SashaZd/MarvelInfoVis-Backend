@@ -1,6 +1,7 @@
 from django.db import models
 import json, re
 
+
 class Affiliations(models.Model):
 	title = models.CharField(max_length=50)
 
@@ -143,47 +144,10 @@ class Relationship(models.Model):
 listOfAffilitations = json.loads(open("data/affiliations_all.json").read())
 for eachAffiliation in listOfAffilitations:
 	newAff = Affiliations(title=eachAffiliation.strip())
-	newAff.save()
+ 	newAff.save()
 """
 
-"""
-# For Character Table: 
-listOfCharsFiles = open("data/charactersList.txt")
-citizenship_members = json.loads(open("data/citizenships_members.txt").read())
-origins_members = json.loads(open("data/origins_members.txt").read())
-CHAR_BASE_LINK = "data/characters/"
-
-for eachCharFile in listOfCharsFiles: 
-	filePath = CHAR_BASE_LINK+eachCharFile.strip()
-	charData = json.loads(open(filePath).read())
-	
-	thumbnail = charData["thumbnail"]["path"]+"."+charData["thumbnail"]["extension"]
-	bio_desc = "",
-	nationality_list = citizenship_members[str(charData["id"])]
-	nationality = ', '.join(str(e) for e in nationality_list)
-
-	if "wiki" in charData: 
-		if "blurb" in charData["wiki"]: 
-			bio_desc = charData["wiki"]["blurb"]
-		elif "bio_text" in charData["wiki"]:
-			bio_desc = charData["wiki"]["bio_text"]
-		elif "bio" in charData["wiki"]:
-			bio_desc = charData["wiki"]["bio"]
-
-	newChar = Character(
-		character_id= charData["id"],
-		name= charData["name"],
-		appearances= charData["comics"]["available"],
-		gender= "Unknown",
-		nationality= nationality,
-		intro_year= origins_members[str(charData["id"])],
-		image= thumbnail,
-		bio_desc= bio_desc
-		);
-
-	newChar.save()
-"""	
-
+# Add data to Comic table
 """
 # For Comic Table:
 
@@ -229,10 +193,48 @@ for eachComicFile in listOfComicFiles:
 		price_print = comicBook["price_print"]
 	);
 
-	print comicBook["comic_id"]
 	newComic.save()
+"""
+
 
 """
+# For Character Table: 
+listOfCharsFiles = open("data/charactersList.txt")
+citizenship_members = json.loads(open("data/citizenships_members.txt").read())
+origins_members = json.loads(open("data/origins_members.txt").read())
+CHAR_BASE_LINK = "data/characters/"
+
+for eachCharFile in listOfCharsFiles: 
+	filePath = CHAR_BASE_LINK+eachCharFile.strip()
+	charData = json.loads(open(filePath).read())
+	
+	thumbnail = charData["thumbnail"]["path"]+"."+charData["thumbnail"]["extension"]
+	bio_desc = "",
+	nationality_list = citizenship_members[str(charData["id"])]
+	nationality = ', '.join(str(e) for e in nationality_list)
+
+	if "wiki" in charData: 
+		if "blurb" in charData["wiki"]: 
+			bio_desc = charData["wiki"]["blurb"]
+		elif "bio_text" in charData["wiki"]:
+			bio_desc = charData["wiki"]["bio_text"]
+		elif "bio" in charData["wiki"]:
+			bio_desc = charData["wiki"]["bio"]
+
+	newChar = Character(
+		character_id= charData["id"],
+		name= charData["name"],
+		appearances= charData["comics"]["available"],
+		gender= "Unknown",
+		nationality= nationality,
+		intro_year= origins_members[str(charData["id"])],
+		image= thumbnail,
+		bio_desc= bio_desc
+		);
+
+	newChar.save()
+"""	
+
 """
 #Add Aliases into Database
 aliasesDict = json.loads(open("data/MarvelCharacters_Aliases.json").read())
